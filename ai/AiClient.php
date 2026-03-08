@@ -6,7 +6,7 @@ function initAiAgent($config) {
 		$aiClient = new OpenAIClient($config['openai_key'], $config['openai_model'] ?? 'gpt-4o');
 	} else {
 		include_once __DIR__.'/OllamaClient.php';
-		$aiClient = new OllamaClient($config['ollama_url'], $config['ollama_model']);
+		$aiClient = new OllamaClient($config['ollama_url'], $config['ollama_model'], $config['ollama_key'] ?? '');
 	}
 
 	return $aiClient;

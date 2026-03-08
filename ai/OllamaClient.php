@@ -8,12 +8,14 @@ class OllamaClient
 {
     private string $baseUrl;
     private string $model;
+    private string $key;
     private ?array $lastResponse = null;
 
-    public function __construct(string $baseUrl = 'http://localhost:11434', string $model = 'llama2')
+    public function __construct(string $baseUrl = 'http://localhost:11434', string $model = 'llama2', string $key = '')
     {
         $this->baseUrl = rtrim($baseUrl, '/');
         $this->model = $model;
+        $this->key = $key;
     }
 
     /**
@@ -90,10 +92,15 @@ class OllamaClient
         $url = $this->baseUrl . $path;
         $json = json_encode($body, JSON_THROW_ON_ERROR);
 
+		$auth = "";
+		if($this->key != "") {
+			$auth = "\r\nAuthorization: Bearer ".$this->key;
+		}
+
         $ctx = stream_context_create([
             'http' => [
                 'method'  => 'POST',
-                'header'  => "Content-Type: application/json\r\nContent-Length: " . strlen($json),
+                'header'  => "Content-Type: application/json\r\nContent-Length: " . strlen($json).$auth,
                 'content' => $json,
                 'timeout' => 300.0,
             ],
